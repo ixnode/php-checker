@@ -1,6 +1,6 @@
 # PHP Size Byte
 
-This library provides check routines to validate data types from given variables.
+A collection of various PHP types check classes.
 
 ## Installation
 
