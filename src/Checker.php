@@ -61,6 +61,45 @@ class Checker extends CheckerAbstract
     }
 
     /**
+     * Checks the given value for array flat.
+     *
+     * @return array<string, bool|float|int|string|null>
+     * @throws TypeInvalidException
+     */
+    public function checkArrayFlat(): array
+    {
+        if (!is_array($this->value)) {
+            throw new TypeInvalidException('array', gettype($this->value));
+        }
+
+        foreach ($this->value as $value) {
+            if (is_bool($value)) {
+                continue;
+            }
+
+            if (is_float($value)) {
+                continue;
+            }
+
+            if (is_int($value)) {
+                continue;
+            }
+
+            if (is_string($value)) {
+                continue;
+            }
+
+            if (is_null($value)) {
+                continue;
+            }
+
+            throw new TypeInvalidException('string', gettype($value));
+        }
+
+        return $this->value;
+    }
+
+    /**
      * Checks the given value for a non-associative array.
      *
      * @return array<int, mixed>
