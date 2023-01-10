@@ -40,6 +40,27 @@ class Checker extends CheckerAbstract
     }
 
     /**
+     * Checks the given value for array string.
+     *
+     * @return string[]
+     * @throws TypeInvalidException
+     */
+    public function checkArrayString(): array
+    {
+        if (!is_array($this->value)) {
+            throw new TypeInvalidException('array', gettype($this->value));
+        }
+
+        foreach ($this->value as $value) {
+            if (!is_string($value)) {
+                throw new TypeInvalidException('string', gettype($value));
+            }
+        }
+
+        return $this->value;
+    }
+
+    /**
      * Checks the given value for a non-associative array.
      *
      * @return array<int, mixed>
