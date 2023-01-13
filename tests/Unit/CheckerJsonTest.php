@@ -21,7 +21,8 @@ use PHPUnit\Framework\TestCase;
  * Class CheckerJsonTest
  *
  * @author Björn Hempel <bjoern@hempel.li>
- * @version 0.1.0 (2022-12-30)
+ * @version 0.1.1 (2023-01-12)
+ * @since 0.1.1 (2023-01-12) Refactoring and tidy up.
  * @since 0.1.0 (2022-12-30) First version.
  * @link CheckerJson
  */
@@ -63,7 +64,7 @@ final class CheckerJsonTest extends TestCase
      * Data provider (Checker::checkX).
      *
      * @return array<int, array{int, string, mixed, null|string}>
-     * @link CheckerJson::checkJson()
+     * @link CheckerJson::check()
      */
     public function dataProviderCheck(): array
     {
@@ -71,8 +72,8 @@ final class CheckerJsonTest extends TestCase
 
         return [
             /* JSON checks */
-            [++$number, 'checkJson', '{}', null, ],
-            [++$number, 'checkJson', null, TypeInvalidException::class, ],
+            [++$number, 'check', '{}', null, ],
+            [++$number, 'check', null, TypeInvalidException::class, ],
         ];
     }
 

@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace Ixnode\PhpChecker\Tests\Unit;
 
+use Ixnode\PhpChecker\Checker;
 use Ixnode\PhpChecker\CheckerArray;
 use Ixnode\PhpException\ArrayType\ArrayKeyNotFoundException;
+use Ixnode\PhpException\Class\ClassInvalidException;
 use Ixnode\PhpException\Type\TypeInvalidException;
 use PHPUnit\Framework\TestCase;
 
@@ -22,7 +24,8 @@ use PHPUnit\Framework\TestCase;
  * Class CheckerArrayTest
  *
  * @author Björn Hempel <bjoern@hempel.li>
- * @version 0.1.0 (2022-12-30)
+ * @version 0.1.1 (2023-01-12)
+ * @since 0.1.1 (2023-01-12) Refactoring and tidy up.
  * @since 0.1.0 (2022-12-30) First version.
  * @link CheckerArray
  */
@@ -82,6 +85,47 @@ final class CheckerArrayTest extends TestCase
         $number = 0;
 
         return [
+            /* check */
+            [++$number, 'check', [1, 2, 3, ], null, null, [1, 2, 3, ], null, ],
+            [++$number, 'check', '[1, 2, 3, ]', null, null, '[1, 2, 3, ]', TypeInvalidException::class, ],
+
+            /* checkArray */
+            [++$number, 'checkArray', [[1, ], [2, ], [3, ], ], null, null, [[1, ], [2, ], [3, ], ], null, ],
+            [++$number, 'checkArray', '[1, 2, 3, ]', null, null, '[1, 2, 3, ]', TypeInvalidException::class, ],
+
+            /* checkAssoziative */
+            [++$number, 'checkAssoziative', ['key1' => 'value 1', 'key2' => 'value 2', 'key3' => 'value 3', ], null, null, ['key1' => 'value 1', 'key2' => 'value 2', 'key3' => 'value 3', ], null, ],
+            [++$number, 'checkAssoziative', [1, 2, 3, ], null, null, [1, 2, 3, ], TypeInvalidException::class, ],
+            [++$number, 'checkAssoziative', '[1, 2, 3, ]', null, null, null, TypeInvalidException::class, ],
+
+            /* checkClass */
+            [++$number, 'checkClass', [new Checker(123), new Checker(123), new Checker(123), ], Checker::class, null, [new Checker(123), new Checker(123), new Checker(123), ], null, ],
+            [++$number, 'checkClass', [new Checker(123), new Checker(123), new Checker(123), ], self::class, null, [new Checker(123), new Checker(123), new Checker(123), ], ClassInvalidException::class, ],
+            [++$number, 'checkClass', '[1, 2, 3, ]', Checker::class, null, null, TypeInvalidException::class, ],
+
+            /* checkFlat */
+            [++$number, 'checkFlat', [1, 2, 3, ], null, null, [1, 2, 3, ], null, ],
+            [++$number, 'checkFlat', ['1', '2', '3', ], null, null, ['1', '2', '3', ], null, ],
+            [++$number, 'checkFlat', [.1, .2, .3, ], null, null, [.1, .2, .3, ], null, ],
+            [++$number, 'checkFlat', [null, null, null, ], null, null, [null, null, null, ], null, ],
+            [++$number, 'checkFlat', [true, true, true, ], null, null, [true, true, true, ], null, ],
+            [++$number, 'checkFlat', [[1, ], [2, ], [3, ], ], null, null, [[1, ], [2, ], [3, ], ], TypeInvalidException::class, ],
+
+            /* checkSimple */
+            [++$number, 'checkSimple', [1, 2, 3, ], null, null, [1, 2, 3, ], null, ],
+            [++$number, 'checkSimple', '[1, 2, 3, ]', null, null, '[1, 2, 3, ]', TypeInvalidException::class, ],
+
+            /* checkString */
+            [++$number, 'checkString', ['1', '2', '3', ], null, null, ['1', '2', '3', ], null, ],
+            [++$number, 'checkString', ['1', '2', 3, ], null, null, ['1', '2', 3, ], TypeInvalidException::class, ],
+            [++$number, 'checkString', '[1, 2, 3, ]', null, null, '[1, 2, 3, ]', TypeInvalidException::class, ],
+
+            /* checkStringOrNull */
+            [++$number, 'checkStringOrNull', ['1', '2', '3', ], null, null, ['1', '2', '3', ], null, ],
+            [++$number, 'checkStringOrNull', ['1', '2', null, ], null, null, ['1', '2', null, ], null, ],
+            [++$number, 'checkStringOrNull', ['1', '2', 3, ], null, null, ['1', '2', 3, ], TypeInvalidException::class, ],
+            [++$number, 'checkStringOrNull', '[1, 2, 3, ]', null, null, '[1, 2, 3, ]', TypeInvalidException::class, ],
+
             /* checkIndex */
             [++$number, 'checkIndex', [1, 2, 3, ], '0', null, 1, null, ],
             [++$number, 'checkIndex', [1, 2, 3, ], '10', null, 1, ArrayKeyNotFoundException::class, ],
@@ -100,9 +144,9 @@ final class CheckerArrayTest extends TestCase
             [++$number, 'checkIndexArray', [1, 2, 3, ], '0', null, 1, TypeInvalidException::class, ],
 
             /* checkIndexArray */
-            [++$number, 'checkIndexStringArray', [['1', '2', '3', ], ['2', ], ['3', ], ], '0', null, ['1', '2', '3', ], null, ],
-            [++$number, 'checkIndexStringArray', [['1', 2, 3, ], ['2', ], ['3', ], ], '0', null, ['1', 2, 3, ], TypeInvalidException::class, ],
-            [++$number, 'checkIndexStringArray', [1, 2, 3, ], '0', null, 1, TypeInvalidException::class, ],
+            [++$number, 'checkIndexArrayString', [['1', '2', '3', ], ['2', ], ['3', ], ], '0', null, ['1', '2', '3', ], null, ],
+            [++$number, 'checkIndexArrayString', [['1', 2, 3, ], ['2', ], ['3', ], ], '0', null, ['1', 2, 3, ], TypeInvalidException::class, ],
+            [++$number, 'checkIndexArrayString', [1, 2, 3, ], '0', null, 1, TypeInvalidException::class, ],
 
             /* checkIndexArrayArray */
             [

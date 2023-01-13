@@ -23,7 +23,7 @@
   },
   "require": {
     "php": "^8.0",
-    "ixnode/php-exception": "^0.1.4"
+    "ixnode/php-exception": "^0.1.17"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.5",

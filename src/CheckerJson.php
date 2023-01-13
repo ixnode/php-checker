@@ -19,7 +19,8 @@ use Ixnode\PhpException\Type\TypeInvalidException;
  * Class CheckerJson
  *
  * @author Björn Hempel <bjoern@hempel.li>
- * @version 0.1.0 (2022-12-30)
+ * @version 0.1.1 (2023-01-12)
+ * @since 0.1.1 (2023-01-12) Refactoring and tidy up.
  * @since 0.1.0 (2022-12-30) First version.
  */
 class CheckerJson extends CheckerAbstract
@@ -30,14 +31,14 @@ class CheckerJson extends CheckerAbstract
      * @return string
      * @throws TypeInvalidException
      */
-    public function checkJson(): string
+    public function check(): string
     {
         $this->value = (new Checker($this->value))->checkString();
 
         json_decode($this->value);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new TypeInvalidException('json');
+            throw new TypeInvalidException('json-string');
         }
 
         return $this->value;

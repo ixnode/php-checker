@@ -21,7 +21,8 @@ use stdClass;
  * Class CheckerClass
  *
  * @author Björn Hempel <bjoern@hempel.li>
- * @version 0.1.0 (2022-12-30)
+ * @version 0.1.1 (2023-01-12)
+ * @since 0.1.1 (2023-01-12) Refactoring and tidy up.
  * @since 0.1.0 (2022-12-30) First version.
  */
 class CheckerClass extends CheckerAbstract
@@ -35,14 +36,14 @@ class CheckerClass extends CheckerAbstract
      * @throws TypeInvalidException
      * @throws ClassInvalidException
      */
-    public function checkGiven(string $className)
+    public function checkClass(string $className)
     {
         if (!is_object($this->value)) {
             throw new TypeInvalidException($className, gettype($this->value));
         }
 
         if (!$this->value instanceof $className) {
-            throw new ClassInvalidException($className, $this->value::class);
+            throw new ClassInvalidException($this->value::class, $className);
         }
 
         return $this->value;

@@ -23,7 +23,8 @@ use PHPUnit\Framework\TestCase;
  * Class CheckerClassTest
  *
  * @author Björn Hempel <bjoern@hempel.li>
- * @version 0.1.0 (2022-12-30)
+ * @version 0.1.1 (2023-01-12)
+ * @since 0.1.1 (2023-01-12) Refactoring and tidy up.
  * @since 0.1.0 (2022-12-30) First version.
  * @link CheckerClass
  */
@@ -68,7 +69,7 @@ final class CheckerClassTest extends TestCase
      * Data provider (CheckerClass::checkX).
      *
      * @return array<int, array{int, string, mixed, class-string|null, null|string}>
-     * @link CheckerClass::checkGiven()
+     * @link CheckerClass::check()
      * @link CheckerClass::checkStdClass()
      */
     public function dataProviderCheck(): array
@@ -77,9 +78,9 @@ final class CheckerClassTest extends TestCase
 
         return [
             /* class given checks */
-            [++$number, 'checkGiven', new Checker(123), Checker::class, null, ],
-            [++$number, 'checkGiven', 'checker', Checker::class, TypeInvalidException::class, ],
-            [++$number, 'checkGiven', new Checker(123), CheckerClassTest::class, ClassInvalidException::class, ],
+            [++$number, 'checkClass', new Checker(123), Checker::class, null, ],
+            [++$number, 'checkClass', 'checker', Checker::class, TypeInvalidException::class, ],
+            [++$number, 'checkClass', new Checker(123), CheckerClassTest::class, ClassInvalidException::class, ],
 
             /* stdClass checks */
             [++$number, 'checkStdClass', (object)[], null, null, ],

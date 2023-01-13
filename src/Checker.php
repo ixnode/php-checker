@@ -13,135 +13,30 @@ declare(strict_types=1);
 
 namespace Ixnode\PhpChecker;
 
+use Ixnode\PhpException\Class\ClassInvalidException;
 use Ixnode\PhpException\Type\TypeInvalidException;
+use stdClass;
 
 /**
  * Class Checker
  *
  * @author Björn Hempel <bjoern@hempel.li>
- * @version 0.1.0 (2022-12-30)
+ * @version 0.1.1 (2023-01-12)
+ * @since 0.1.1 (2023-01-12) Refactoring and tidy up.
  * @since 0.1.0 (2022-12-30) First version.
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class Checker extends CheckerAbstract
 {
     /**
-     * Checks the given value for array.
+     * Checks the given value for an array.
      *
      * @return array<int|string, mixed>
      * @throws TypeInvalidException
      */
     public function checkArray(): array
     {
-        if (!is_array($this->value)) {
-            throw new TypeInvalidException('array', gettype($this->value));
-        }
-
-        return $this->value;
-    }
-
-    /**
-     * Checks the given value for array string.
-     *
-     * @return string[]
-     * @throws TypeInvalidException
-     */
-    public function checkArrayString(): array
-    {
-        if (!is_array($this->value)) {
-            throw new TypeInvalidException('array', gettype($this->value));
-        }
-
-        foreach ($this->value as $value) {
-            if (!is_string($value)) {
-                throw new TypeInvalidException('string', gettype($value));
-            }
-        }
-
-        return $this->value;
-    }
-
-    /**
-     * Checks the given value for array flat.
-     *
-     * @return array<string, bool|float|int|string|null>
-     * @throws TypeInvalidException
-     */
-    public function checkArrayFlat(): array
-    {
-        if (!is_array($this->value)) {
-            throw new TypeInvalidException('array', gettype($this->value));
-        }
-
-        foreach ($this->value as $value) {
-            if (is_bool($value)) {
-                continue;
-            }
-
-            if (is_float($value)) {
-                continue;
-            }
-
-            if (is_int($value)) {
-                continue;
-            }
-
-            if (is_string($value)) {
-                continue;
-            }
-
-            if (is_null($value)) {
-                continue;
-            }
-
-            throw new TypeInvalidException('string', gettype($value));
-        }
-
-        return $this->value;
-    }
-
-    /**
-     * Checks the given value for a non-associative array.
-     *
-     * @return array<int, mixed>
-     * @throws TypeInvalidException
-     */
-    public function checkArraySimple(): array
-    {
-        if (!is_array($this->value)) {
-            throw new TypeInvalidException('array', gettype($this->value));
-        }
-
-        return $this->value;
-    }
-
-    /**
-     * Checks the given value for string.
-     *
-     * @return string
-     * @throws TypeInvalidException
-     */
-    public function checkString(): string
-    {
-        if (!is_string($this->value)) {
-            throw new TypeInvalidException('string', gettype($this->value));
-        }
-
-        return $this->value;
-    }
-
-    /**
-     * Checks the given value for float.
-     *
-     * @return float
-     * @throws TypeInvalidException
-     */
-    public function checkFloat(): float
-    {
-        if (!is_float($this->value)) {
-            throw new TypeInvalidException('float', gettype($this->value));
-        }
-
-        return $this->value;
+        return (new CheckerArray($this->getValue()))->check();
     }
 
     /**
@@ -152,26 +47,40 @@ class Checker extends CheckerAbstract
      */
     public function checkBoolean(): bool
     {
-        if (!is_bool($this->value)) {
-            throw new TypeInvalidException('boolean', gettype($this->value));
+        if (!is_bool($this->getValue())) {
+            throw new TypeInvalidException('boolean', gettype($this->getValue()));
         }
 
-        return $this->value;
+        return $this->getValue();
     }
 
     /**
-     * Checks the given value for object.
+     * Checks the given value for the given class.
      *
-     * @return object
+     * @template T
+     * @param class-string<T> $className
+     * @return T
+     * @throws TypeInvalidException
+     * @throws ClassInvalidException
+     */
+    public function checkClass(string $className)
+    {
+        return (new CheckerClass($this->getValue()))->checkClass($className);
+    }
+
+    /**
+     * Checks the given value for float.
+     *
+     * @return float
      * @throws TypeInvalidException
      */
-    public function checkObject(): object
+    public function checkFloat(): float
     {
-        if (!is_object($this->value)) {
-            throw new TypeInvalidException('object', gettype($this->value));
+        if (!is_float($this->getValue())) {
+            throw new TypeInvalidException('float', gettype($this->getValue()));
         }
 
-        return $this->value;
+        return $this->getValue();
     }
 
     /**
@@ -182,10 +91,92 @@ class Checker extends CheckerAbstract
      */
     public function checkIterable(): iterable
     {
-        if (!is_iterable($this->value)) {
-            throw new TypeInvalidException('iterable', gettype($this->value));
+        if (!is_iterable($this->getValue())) {
+            throw new TypeInvalidException('iterable', gettype($this->getValue()));
         }
 
-        return $this->value;
+        return $this->getValue();
+    }
+
+    /**
+     * Checks the given value for integer.
+     *
+     * @return int
+     * @throws TypeInvalidException
+     */
+    public function checkInteger(): int
+    {
+        if (!is_int($this->getValue())) {
+            throw new TypeInvalidException('int', gettype($this->getValue()));
+        }
+
+        return $this->getValue();
+    }
+
+    /**
+     * Checks the given value for json.
+     *
+     * @return string
+     * @throws TypeInvalidException
+     */
+    public function checkJson(): string
+    {
+        return (new CheckerJson($this->getValue()))->check();
+    }
+
+    /**
+     * Checks the given value for object.
+     *
+     * @return object
+     * @throws TypeInvalidException
+     */
+    public function checkObject(): object
+    {
+        if (!is_object($this->getValue())) {
+            throw new TypeInvalidException('object', gettype($this->getValue()));
+        }
+
+        return $this->getValue();
+    }
+
+    /**
+     * Checks the given value for stdClass.
+     *
+     * @return stdClass
+     * @throws TypeInvalidException
+     */
+    public function checkStdClass(): stdClass
+    {
+        return (new CheckerClass($this->getValue()))->checkStdClass();
+    }
+
+    /**
+     * Checks the given value for string.
+     *
+     * @return string
+     * @throws TypeInvalidException
+     */
+    public function checkString(): string
+    {
+        if (!is_string($this->getValue())) {
+            throw new TypeInvalidException('string', gettype($this->getValue()));
+        }
+
+        return $this->getValue();
+    }
+
+    /**
+     * Checks the given value for string or null.
+     *
+     * @return string|null
+     * @throws TypeInvalidException
+     */
+    public function checkStringOrNull(): ?string
+    {
+        if (!is_string($this->getValue()) && !is_null($this->getValue())) {
+            throw new TypeInvalidException('string', gettype($this->getValue()));
+        }
+
+        return $this->getValue();
     }
 }

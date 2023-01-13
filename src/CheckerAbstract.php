@@ -30,4 +30,14 @@ abstract class CheckerAbstract
     public function __construct(protected mixed $value)
     {
     }
+
+    /**
+     * Returns the raw value of this class.
+     *
+     * @return mixed
+     */
+    protected function getValue(): mixed
+    {
+        return $this->value;
+    }
 }
