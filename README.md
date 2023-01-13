@@ -49,7 +49,37 @@ use Ixnode\PhpChecker\Checker;
 ```
 
 ```php
-$array = (new Checker([]))->checkArray();
+$array = (new Checker(.0))->checkFloat();
+```
+
+### Example 2
+
+```php
+use Ixnode\PhpChecker\CheckerArray;
+```
+
+```php
+$array = (new CheckerArray([new Checker(123), new Checker(456), new Checker(678)])->checkClass(Checker::class);
+```
+
+### Example 3
+
+```php
+use Ixnode\PhpChecker\CheckerClass;
+```
+
+```php
+$array = (new CheckerClass(new Checker(123)))->check(Checker::class);
+```
+
+### Example 4
+
+```php
+use Ixnode\PhpChecker\CheckerJson;
+```
+
+```php
+$array = (new CheckerJson('{"1": 1, "2": 2, "3": 3}'))->check();
 ```
 
 ## Available checkers
@@ -111,10 +141,10 @@ Checks class specific properties.
 
 Checks JSON specific properties.
 
-| Method      | Expected input | Method Parameters | Output value (if passed) | Exception              |
-|-------------|----------------|-------------------|--------------------------|------------------------|
-| `checkJson` | `json-string`  | `null`            | _Same as input_          | `TypeInvalidException` |
-| `isJson`    | `json-string`  | `null`            | `bool`                   | `null`                 |
+| Method   | Expected input | Method Parameters | Output value (if passed) | Exception              |
+|----------|----------------|-------------------|--------------------------|------------------------|
+| `check`  | `json-string`  | `null`            | _Same as input_          | `TypeInvalidException` |
+| `isJson` | `json-string`  | `null`            | `bool`                   | `null`                 |
 
 ## Development
 
