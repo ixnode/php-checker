@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Releases
 
+### [0.1.8] - 2023-01-22
+
+* Rename CheckerArray::checkSimple to CheckerArray::checkSequential.
+* Rename CheckerArray::checkIndexArraySimple to CheckerArray::checkIndexArraySequential.
+
 ### [0.1.7] - 2023-01-13
 
 * Add documentation

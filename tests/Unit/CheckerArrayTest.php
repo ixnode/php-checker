@@ -111,9 +111,9 @@ final class CheckerArrayTest extends TestCase
             [++$number, 'checkFlat', [true, true, true, ], null, null, [true, true, true, ], null, ],
             [++$number, 'checkFlat', [[1, ], [2, ], [3, ], ], null, null, [[1, ], [2, ], [3, ], ], TypeInvalidException::class, ],
 
-            /* checkSimple */
-            [++$number, 'checkSimple', [1, 2, 3, ], null, null, [1, 2, 3, ], null, ],
-            [++$number, 'checkSimple', '[1, 2, 3, ]', null, null, '[1, 2, 3, ]', TypeInvalidException::class, ],
+            /* checkSequential */
+            [++$number, 'checkSequential', [1, 2, 3, ], null, null, [1, 2, 3, ], null, ],
+            [++$number, 'checkSequential', '[1, 2, 3, ]', null, null, '[1, 2, 3, ]', TypeInvalidException::class, ],
 
             /* checkString */
             [++$number, 'checkString', ['1', '2', '3', ], null, null, ['1', '2', '3', ], null, ],

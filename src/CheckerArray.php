@@ -142,7 +142,7 @@ class CheckerArray extends CheckerAbstract
      * @return array<int, mixed>
      * @throws TypeInvalidException
      */
-    public function checkSimple(): array
+    public function checkSequential(): array
     {
         $value = $this->getValue();
 
@@ -276,9 +276,9 @@ class CheckerArray extends CheckerAbstract
      * @throws TypeInvalidException
      * @throws ArrayKeyNotFoundException
      */
-    public function checkIndexArraySimple(string $index): array
+    public function checkIndexArraySequential(string $index): array
     {
-        return (new CheckerArray($this->checkIndex($index)))->checkSimple();
+        return (new CheckerArray($this->checkIndex($index)))->checkSequential();
     }
 
     /**
