@@ -1,6 +1,6 @@
 {
   "name": "ixnode/php-checker",
-  "description": "PHP Size Byte",
+  "description": "PHP Checker - A collection of various PHP types check classes.",
   "type": "library",
   "license": "MIT",
   "keywords": ["php", "checker"],
@@ -23,7 +23,7 @@
   },
   "require": {
     "php": "^8.0",
-    "ixnode/php-exception": "^0.1.17"
+    "ixnode/php-exception": "^0.1.19"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.5",
